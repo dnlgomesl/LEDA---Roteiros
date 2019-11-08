@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2019-09-05T20:34:35.957-0300</date>
+  <logger>DANIEL GOMES DE LIMA</logger>
+  <level>FINE</level>
+  <message>File 118210357-DANIEL GOMES DE LIMA.zip was received. It was sent by DANIEL GOMES DE LIMA from IP 192.168.0.110 at 05-09-2019 20*34*35</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2019-09-05T22:21:40.249-0300</date>
+  <logger>DANIEL GOMES DE LIMA</logger>
+  <level>FINE</level>
+  <message>File 118210357-DANIEL GOMES DE LIMA.zip was received. It was sent by DANIEL GOMES DE LIMA from IP 192.168.0.110 at 05-09-2019 22*21*40</message>
+</record>

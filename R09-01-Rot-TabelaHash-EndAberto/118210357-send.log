@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2019-10-07T17:14:32.706-0300</date>
+  <logger>DANIEL GOMES DE LIMA</logger>
+  <level>FINE</level>
+  <message>File 118210357-DANIEL GOMES DE LIMA.zip was received. It was sent by DANIEL GOMES DE LIMA from IP 192.168.0.110 at 07-10-2019 17*14*32</message>
+</record>
