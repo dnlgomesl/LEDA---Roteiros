@@ -2,6 +2,7 @@ package main.btree;
 
 import javax.xml.transform.Result;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BTreeImpl<T extends Comparable<T>> implements BTree<T> {
@@ -110,6 +111,30 @@ public class BTreeImpl<T extends Comparable<T>> implements BTree<T> {
     }
 
     private void insert(T element, BNode<T> node) {
+        if(node.isLeaf()) {
+            LinkedList<T> list = new LinkedList<>();
+            for (int i = 0; i < node.getElements().size(); i++) {
+                if(element.compareTo(node.getElementAt(i)) < 0){
+                    list.add(i, element);
+                }
+                list.add(element);
+            }
+            node.setElements(list);
+            if(node.getElements().size() > order-1){
+                split(node);
+            }
+            if(node.getParent() != null && node.getParent().getElements().size() > order-1){
+                split(node.getParent());
+            }
+        } else {
+            int j = -1;
+            for (int i = 0; i < node.getElements().size(); i++) {
+                if(element.compareTo(node.getElementAt(i)) < 0 && j == -1){
+                    j++;
+                }
+            }
+            insert(element, node.getChildren().get(j));
+        }
     }
 
     private void split(BNode<T> node) {
