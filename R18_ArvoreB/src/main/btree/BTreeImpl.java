@@ -138,6 +138,14 @@ public class BTreeImpl<T extends Comparable<T>> implements BTree<T> {
     }
 
     private void split(BNode<T> node) {
+        if(node != null){
+            T element = node.getElementAt((node.getElements().size()) / 2);
+            if(node.getParent() != null){
+                node.setParent(new BNode<>(order));
+                this.root = node.getParent();
+            }
+            node.getParent().addElement(element);
+        }
     }
 
     private void promote(BNode<T> node) {
