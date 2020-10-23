@@ -14,12 +14,12 @@ public class Util {
       BSTNode<T> pivot = (BSTNode<T>) node.getRight();
       // NODE.OS = PIVOT.RS
       node.setRight(pivot.getLeft());
-      if (pivot.getLeft() != null) {
+      if(pivot.getLeft() != null){
          pivot.getLeft().setParent(node);
       }
       pivot.setParent(node.getParent());
-      if (node.getParent() != null) {
-         if (node.equals(node.getParent().getLeft())) {
+      if(node.getParent() != null){
+         if(node.equals(node.getParent().getLeft())){
             node.getParent().setLeft(pivot);
          } else {
             node.getParent().setRight(pivot);
@@ -27,8 +27,8 @@ public class Util {
       }
       // PIVOT.RS = NODE
       pivot.setLeft(node);
-      // ROOT = PIVOT
       node.setParent(pivot);
+      // ROOT = PIVOT
       return pivot;
    }
 

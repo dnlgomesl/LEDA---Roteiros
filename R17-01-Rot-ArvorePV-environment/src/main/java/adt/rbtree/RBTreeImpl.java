@@ -1,6 +1,7 @@
 package adt.rbtree;
 
 import adt.bst.BSTImpl;
+import adt.bst.BSTNode;
 import adt.rbtree.RBNode.Colour;
 
 import java.util.ArrayList;
@@ -14,6 +15,26 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 
 	public RBTreeImpl() {
 		this.root = new RBNode<T>();
+	}
+
+	public int countRedNodes(){
+		int result = 0;
+		if(this.isEmpty()){
+			result = countRedNodes((RBNode<T>) this.root);
+		}
+		return result;
+	}
+
+	private int countRedNodes(RBNode<T> node) {
+		int result = 0;
+		if(node != null && !isEmpty()){
+			if(node.getColour().equals(Colour.RED)){
+				result = 1 + countRedNodes((RBNode<T>) node.getLeft()) + countRedNodes((RBNode<T>) node.getRight());
+			} else {
+				result = countRedNodes((RBNode<T>) node.getLeft()) + countRedNodes((RBNode<T>) node.getRight());
+			}
+		}
+		return result;
 	}
 
 	protected int blackHeight() {

@@ -33,7 +33,7 @@ public class BTreeImpl<T extends Comparable<T>> implements BTree<T> {
     private int height(BNode<T> node) {
         int height = -1;
 
-        if (node != null && !node.isEmpty()) {
+        if (node != null && !isEmpty()) {
             if (node.isLeaf()) {
                 height = 0;
             } else {
@@ -89,17 +89,17 @@ public class BTreeImpl<T extends Comparable<T>> implements BTree<T> {
 
     private BNodePosition<T> seachAuxMethod(BNode<T> node, T element) {
         int i = 0;
-        BNodePosition<T> result;
-        while (i <= node.size() && element.compareTo(node.getElementAt(i)) > 0) {
+        while (i < node.getElements().size() && node.getElementAt(i).compareTo(element) < 0) {
             i++;
-        }if(i < node.size() && element.equals(node.getElementAt(i))){
+        }
+        BNodePosition<T> result = null;
+        if(i < node.getElements().size() && node.getElementAt(i).equals(element)){
                 result = new BNodePosition<>(node, i);
         } else if (node.isLeaf()){
                 result = new BNodePosition<>();
         } else {
                 result = seachAuxMethod(node.getChildren().get(i), element);
         }
-        result = new BNodePosition<>();
         return result;
     }
 
@@ -111,45 +111,73 @@ public class BTreeImpl<T extends Comparable<T>> implements BTree<T> {
     }
 
     private void insert(T element, BNode<T> node) {
-        if(node.isLeaf()) {
-            LinkedList<T> list = new LinkedList<>();
-            for (int i = 0; i < node.getElements().size(); i++) {
-                if(element.compareTo(node.getElementAt(i)) < 0){
-                    list.add(i, element);
-                }
-                list.add(element);
+        int index = 0;
+        while (index < node.getElements().size() && node.getElementAt(index).compareTo(element) < 0) {
+            index++;
+        }
+        if (index >= node.getElements().size() || !node.getElementAt(index).equals(element)) {
+            if (node.isLeaf()) {
+                node.addElement(element);
+            } else {
+                this.insert(element, node.getChildren().get(index));
             }
-            node.setElements(list);
-            if(node.getElements().size() > order-1){
-                split(node);
-            }
-            if(node.getParent() != null && node.getParent().getElements().size() > order-1){
-                split(node.getParent());
-            }
-        } else {
-            int j = -1;
-            for (int i = 0; i < node.getElements().size(); i++) {
-                if(element.compareTo(node.getElementAt(i)) < 0 && j == -1){
-                    j++;
-                }
-            }
-            insert(element, node.getChildren().get(j));
+        }
+        if (node.getMaxKeys() < node.size()) {
+            this.split(node);
         }
     }
 
     private void split(BNode<T> node) {
-        if(node != null){
-            T element = node.getElementAt((node.getElements().size()) / 2);
-            if(node.getParent() != null){
-                node.setParent(new BNode<>(order));
-                this.root = node.getParent();
+        int medianIndex = node.getElements().size() / 2;
+        BNode<T> rightNode = new BNode<>(this.order);
+        BNode<T> leftNode = new BNode<>(this.order);
+        for (int i = 0; i < node.size(); i++) {
+            if (i < medianIndex) {
+                leftNode.addElement(node.getElementAt(i));
+            } else if (i > medianIndex) {
+                rightNode.addElement(node.getElementAt(i));
             }
-            node.getParent().addElement(element);
+        }
+        T medianValue = node.getElementAt(medianIndex);
+        if (!node.isLeaf()) {
+            for (int i = 0, leftIndex = 0, rightIndex = 0; i < node.getChildren().size(); i++) {
+                if (i <= medianIndex) {
+                    leftNode.addChild(leftIndex++, node.getChildren().get(i));
+                } else {
+                    rightNode.addChild(rightIndex++, node.getChildren().get(i));
+                }
+            }
+        }
+        if (node.equals(this.getRoot())) {
+            BNode<T> newRoot = new BNode<>(this.order);
+            newRoot.addElement(medianValue);
+            node.setParent(newRoot);
+            this.root = newRoot;
+            newRoot.addChild(0, leftNode);
+            newRoot.addChild(1, rightNode);
+            newRoot.getChildren().get(0).setParent(newRoot);
+            newRoot.getChildren().get(1).setParent(newRoot);
+        } else {
+            node.addChild(0, leftNode);
+            node.addChild(1, rightNode);
+            promote(node);
         }
     }
 
     private void promote(BNode<T> node) {
-
+        T medianValue = node.getElementAt(node.getElements().size() / 2);
+        node.getElements().clear();
+        node.addElement(medianValue);
+        BNode<T> parentNode = node.getParent();
+        if (parentNode != null) {
+            node.getChildren().get(0).setParent(parentNode);
+            node.getChildren().get(1).setParent(parentNode);
+            int index = parentNode.getChildren().indexOf(node);
+            parentNode.addElement(medianValue);
+            parentNode.addChild(index++, node.getChildren().get(0));
+            parentNode.addChild(index++, node.getChildren().get(1));
+            parentNode.getChildren().remove(node);
+        }
     }
 
     // NAO PRECISA IMPLEMENTAR OS METODOS ABAIXO

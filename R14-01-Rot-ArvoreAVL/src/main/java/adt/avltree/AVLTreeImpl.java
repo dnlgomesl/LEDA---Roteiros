@@ -45,7 +45,7 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements
 	private void heavyRight(BSTNode<T> node) {
 		BSTNode<T> aux;
 		if(calculateBalance((BSTNode<T>) node.getRight()) <= 0){
-			aux = leftRotation(node);
+			aux = rightRotation(node);
 		} else {
 			rightRotation((BSTNode<T>) node.getRight());
 			aux = leftRotation(node);
